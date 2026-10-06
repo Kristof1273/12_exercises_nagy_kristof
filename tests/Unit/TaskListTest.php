@@ -6,6 +6,7 @@ namespace App\Tests\Unit;
 
 use App\Task;
 use App\TaskList;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -101,5 +102,31 @@ final class TaskListTest extends TestCase
 
         // Assert
         $this->assertNull($task);
+    }
+
+    public function testGetTaskThrowsAnExceptionForANegativeIndex(): void
+    {
+        // Arrange
+        $this->taskList->addTask(new Task(1, 'Write tests'));
+
+        // Assert
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The index must not be negative, -1 given.');
+
+        // Act
+        $this->taskList->getTask(-1);
+    }
+
+    public function testGetTaskByIdThrowsAnExceptionForANegativeId(): void
+    {
+        // Arrange
+        $this->taskList->addTask(new Task(1, 'Write tests'));
+
+        // Assert
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The ID must not be negative, -5 given.');
+
+        // Act
+        $this->taskList->getTaskById(-5);
     }
 }
