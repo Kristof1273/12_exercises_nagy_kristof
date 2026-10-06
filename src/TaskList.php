@@ -9,16 +9,17 @@ namespace App;
  */
 final class TaskList
 {
-    private ?Task $task = null;
+    /** @var list<Task> */
+    private array $tasks = [];
 
     public function addTask(Task $task): void
     {
-        $this->task = $task;
+        $this->tasks[] = $task;
     }
 
     public function getTask(int $index): ?Task
     {
-        return $this->task;
+        return $this->tasks[$index] ?? null;
     }
 
     public function getTaskById(int $id): ?Task
