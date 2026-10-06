@@ -62,6 +62,21 @@ final class TaskRepositoryTest extends TestCase
         $this->assertSame([['id' => 1, 'name' => 'Write tests']], $rows);
     }
 
+    public function testSavingATaskWithAnExistingIdUpdatesTheStoredTask(): void
+    {
+        // Arrange
+        $this->repository->save(new Task(1, 'Write tests'));
+
+        // Act
+        $this->repository->save(new Task(1, 'Write better tests'));
+
+        // Assert: the row was updated, no second row was inserted
+        $this->assertEquals(
+            [new Task(1, 'Write better tests')],
+            $this->repository->findAll(),
+        );
+    }
+
     public function testFindByIdReturnsNullForAnUnknownId(): void
     {
         // Arrange

@@ -105,6 +105,31 @@ final class TaskListTest extends TestCase
         $this->assertNull($task);
     }
 
+    public function testGetTaskByIdReturnsNullWhenTheListIsEmpty(): void
+    {
+        // Arrange (an empty list is created in setUp())
+
+        // Act
+        $task = $this->taskList->getTaskById(1);
+
+        // Assert
+        $this->assertNull($task);
+    }
+
+    public function testGetTaskByIdFindsTheFirstTaskInTheList(): void
+    {
+        // Arrange
+        $firstTask = new Task(42, 'Write tests');
+        $this->taskList->addTask($firstTask);
+        $this->taskList->addTask(new Task(7, 'Make them pass'));
+
+        // Act
+        $task = $this->taskList->getTaskById(42);
+
+        // Assert
+        $this->assertSame($firstTask, $task);
+    }
+
     public function testGetTaskThrowsAnExceptionForANegativeIndex(): void
     {
         // Arrange

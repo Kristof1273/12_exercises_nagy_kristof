@@ -7,6 +7,7 @@ namespace App\Tests\Unit;
 use App\NotificationServiceInterface;
 use App\OrderProcessor;
 use App\PricingServiceInterface;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -71,5 +72,26 @@ final class OrderProcessorTest extends TestCase
 
         // Assert
         $this->assertSame(0.0, $total);
+    }
+
+    public function testProcessOrderRejectsANegativeQuantityWithoutSendingAConfirmation(): void
+    {
+        // Arrange: no confirmation may be sent for an invalid order
+        $pricingService = $this->createStub(PricingServiceInterface::class);
+        $pricingService->method('getPrice')->willReturn(19.99);
+
+        $notificationService = $this->createMock(NotificationServiceInterface::class);
+        $notificationService
+            ->expects($this->never())
+            ->method('sendOrderConfirmation');
+
+        $orderProcessor = new OrderProcessor($pricingService, $notificationService);
+
+        // Assert
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The quantity must not be negative, -1 given.');
+
+        // Act
+        $orderProcessor->processOrder(self::ORDER_ID, self::PRODUCT_ID, -1);
     }
 }
