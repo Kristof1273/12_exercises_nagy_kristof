@@ -13,13 +13,19 @@ use PHPUnit\Framework\TestCase;
  */
 final class TaskListTest extends TestCase
 {
+    private TaskList $taskList;
+
+    protected function setUp(): void
+    {
+        $this->taskList = new TaskList();
+    }
+
     public function testGetTaskReturnsNullWhenTheListIsEmpty(): void
     {
-        // Arrange
-        $taskList = new TaskList();
+        // Arrange (an empty list is created in setUp())
 
         // Act
-        $task = $taskList->getTask(0);
+        $task = $this->taskList->getTask(0);
 
         // Assert
         $this->assertNull($task);
@@ -28,12 +34,11 @@ final class TaskListTest extends TestCase
     public function testAddedTaskCanBeRetrieved(): void
     {
         // Arrange
-        $taskList = new TaskList();
         $task = new Task(1, 'Write tests');
 
         // Act
-        $taskList->addTask($task);
-        $retrievedTask = $taskList->getTask(0);
+        $this->taskList->addTask($task);
+        $retrievedTask = $this->taskList->getTask(0);
 
         // Assert
         $this->assertSame($task, $retrievedTask);
@@ -42,31 +47,29 @@ final class TaskListTest extends TestCase
     public function testMultipleTasksCanBeRetrievedByTheirIndex(): void
     {
         // Arrange
-        $taskList = new TaskList();
         $firstTask = new Task(1, 'Write tests');
         $secondTask = new Task(2, 'Make them pass');
         $thirdTask = new Task(3, 'Refactor');
 
         // Act
-        $taskList->addTask($firstTask);
-        $taskList->addTask($secondTask);
-        $taskList->addTask($thirdTask);
+        $this->taskList->addTask($firstTask);
+        $this->taskList->addTask($secondTask);
+        $this->taskList->addTask($thirdTask);
 
         // Assert
-        $this->assertSame($firstTask, $taskList->getTask(0));
-        $this->assertSame($secondTask, $taskList->getTask(1));
-        $this->assertSame($thirdTask, $taskList->getTask(2));
+        $this->assertSame($firstTask, $this->taskList->getTask(0));
+        $this->assertSame($secondTask, $this->taskList->getTask(1));
+        $this->assertSame($thirdTask, $this->taskList->getTask(2));
     }
 
     public function testGetTaskReturnsNullWhenTheIndexIsOutOfRange(): void
     {
         // Arrange
-        $taskList = new TaskList();
-        $taskList->addTask(new Task(1, 'Write tests'));
-        $taskList->addTask(new Task(2, 'Make them pass'));
+        $this->taskList->addTask(new Task(1, 'Write tests'));
+        $this->taskList->addTask(new Task(2, 'Make them pass'));
 
         // Act
-        $task = $taskList->getTask(2);
+        $task = $this->taskList->getTask(2);
 
         // Assert
         $this->assertNull($task);
