@@ -9,13 +9,16 @@ namespace App;
  */
 final class TaskList
 {
+    private ?Task $task = null;
+
     public function addTask(Task $task): void
     {
+        $this->task = $task;
     }
 
     public function getTask(int $index): ?Task
     {
-        return null;
+        return $this->task;
     }
 
     public function getTaskById(int $id): ?Task
