@@ -38,4 +38,37 @@ final class TaskListTest extends TestCase
         // Assert
         $this->assertSame($task, $retrievedTask);
     }
+
+    public function testMultipleTasksCanBeRetrievedByTheirIndex(): void
+    {
+        // Arrange
+        $taskList = new TaskList();
+        $firstTask = new Task(1, 'Write tests');
+        $secondTask = new Task(2, 'Make them pass');
+        $thirdTask = new Task(3, 'Refactor');
+
+        // Act
+        $taskList->addTask($firstTask);
+        $taskList->addTask($secondTask);
+        $taskList->addTask($thirdTask);
+
+        // Assert
+        $this->assertSame($firstTask, $taskList->getTask(0));
+        $this->assertSame($secondTask, $taskList->getTask(1));
+        $this->assertSame($thirdTask, $taskList->getTask(2));
+    }
+
+    public function testGetTaskReturnsNullWhenTheIndexIsOutOfRange(): void
+    {
+        // Arrange
+        $taskList = new TaskList();
+        $taskList->addTask(new Task(1, 'Write tests'));
+        $taskList->addTask(new Task(2, 'Make them pass'));
+
+        // Act
+        $task = $taskList->getTask(2);
+
+        // Assert
+        $this->assertNull($task);
+    }
 }
