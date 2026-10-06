@@ -24,6 +24,13 @@ final class TaskList
 
     public function getTaskById(int $id): ?Task
     {
+        foreach ($this->tasks as $task) {
+            if ($task->getId() === $id) {
+                return $task;
+            }
+        }
+
+        return null;
     }
 
     public function sortByName(): void
