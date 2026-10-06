@@ -7,6 +7,7 @@ namespace App\Tests\Unit;
 use App\Task;
 use App\TaskList;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -128,5 +129,110 @@ final class TaskListTest extends TestCase
 
         // Act
         $this->taskList->getTaskById(-5);
+    }
+
+    public function testSortByNameOrdersTheTasksAlphabetically(): void
+    {
+        // Arrange
+        $this->addUnsortedTasks();
+
+        // Act
+        $this->taskList->sortByName();
+
+        // Assert
+        $this->assertSame(
+            ['Make them pass', 'Refactor', 'Write tests'],
+            $this->taskNamesInListOrder(),
+        );
+    }
+
+    public function testSortByIdOrdersTheTasksNumerically(): void
+    {
+        // Arrange
+        $this->addUnsortedTasks();
+
+        // Act
+        $this->taskList->sortById();
+
+        // Assert
+        $this->assertSame([1, 2, 3], $this->taskIdsInListOrder());
+    }
+
+    public function testSortByThrowsAnExceptionForAnInvalidColumn(): void
+    {
+        // Arrange
+        $this->addUnsortedTasks();
+
+        // Assert
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot sort by unknown column "priority".');
+
+        // Act
+        $this->taskList->sortBy('priority');
+    }
+
+    /**
+     * @return array<string, array{string, list<int>}>
+     */
+    public static function validSortColumnProvider(): array
+    {
+        return [
+            // description    => [column, expected order of the task IDs]
+            'sort by id'      => ['id', [1, 2, 3]],
+            'sort by name'    => ['name', [2, 3, 1]],
+        ];
+    }
+
+    /**
+     * @param list<int> $expectedIds
+     */
+    #[DataProvider('validSortColumnProvider')]
+    public function testSortByOrdersTheTasksByAValidColumn(string $column, array $expectedIds): void
+    {
+        // Arrange
+        $this->addUnsortedTasks();
+
+        // Act
+        $this->taskList->sortBy($column);
+
+        // Assert
+        $this->assertSame($expectedIds, $this->taskIdsInListOrder());
+    }
+
+    /**
+     * Adds three tasks whose insertion order differs from both their ID
+     * order (1, 2, 3) and their name order (2, 3, 1).
+     */
+    private function addUnsortedTasks(): void
+    {
+        $this->taskList->addTask(new Task(3, 'Refactor'));
+        $this->taskList->addTask(new Task(1, 'Write tests'));
+        $this->taskList->addTask(new Task(2, 'Make them pass'));
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function taskIdsInListOrder(): array
+    {
+        $ids = [];
+        for ($index = 0; ($task = $this->taskList->getTask($index)) !== null; $index++) {
+            $ids[] = $task->getId();
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function taskNamesInListOrder(): array
+    {
+        $names = [];
+        for ($index = 0; ($task = $this->taskList->getTask($index)) !== null; $index++) {
+            $names[] = $task->getName();
+        }
+
+        return $names;
     }
 }
