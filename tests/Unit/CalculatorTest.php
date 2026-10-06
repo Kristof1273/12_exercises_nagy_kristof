@@ -6,6 +6,7 @@ namespace App\Tests\Unit;
 
 use App\Calculator;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -74,7 +75,18 @@ final class CalculatorTest extends TestCase
         $this->assertSame(0.25, $result);
     }
 
-    public function testDivideByZeroThrowsAnInvalidArgumentException(): void
+    /**
+     * Extra Mile - BDD style: the method name reads like a sentence and the
+     * "test" prefix is replaced by the @test annotation.
+     *
+     * PHPUnit 11 deprecates metadata in doc-comments and PHPUnit 12 no longer
+     * reads it, so the equivalent #[Test] attribute is added as well. With
+     * both in place the test runs without a deprecation notice.
+     *
+     * @test
+     */
+    #[Test]
+    public function it_throws_an_invalid_argument_exception_when_dividing_by_zero(): void
     {
         // Arrange
         $calculator = new Calculator();
