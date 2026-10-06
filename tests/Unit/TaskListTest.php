@@ -74,4 +74,32 @@ final class TaskListTest extends TestCase
         // Assert
         $this->assertNull($task);
     }
+
+    public function testGetTaskByIdReturnsTheTaskWithTheGivenId(): void
+    {
+        // Arrange (the IDs deliberately differ from the list indexes)
+        $firstTask = new Task(42, 'Write tests');
+        $secondTask = new Task(7, 'Make them pass');
+        $this->taskList->addTask($firstTask);
+        $this->taskList->addTask($secondTask);
+
+        // Act
+        $task = $this->taskList->getTaskById(7);
+
+        // Assert
+        $this->assertSame($secondTask, $task);
+    }
+
+    public function testGetTaskByIdReturnsNullForAnUnknownId(): void
+    {
+        // Arrange
+        $this->taskList->addTask(new Task(42, 'Write tests'));
+        $this->taskList->addTask(new Task(7, 'Make them pass'));
+
+        // Act
+        $task = $this->taskList->getTaskById(99);
+
+        // Assert
+        $this->assertNull($task);
+    }
 }
