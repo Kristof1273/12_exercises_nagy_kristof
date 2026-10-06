@@ -15,6 +15,7 @@ final class TaskList
 
     public function getTask(int $index): ?Task
     {
+        return null;
     }
 
     public function getTaskById(int $id): ?Task
