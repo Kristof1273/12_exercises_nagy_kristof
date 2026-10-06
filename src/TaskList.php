@@ -11,6 +11,9 @@ use InvalidArgumentException;
  */
 final class TaskList
 {
+    public const COLUMN_ID = 'id';
+    public const COLUMN_NAME = 'name';
+
     /** @var list<Task> */
     private array $tasks = [];
 
@@ -55,45 +58,29 @@ final class TaskList
 
     public function sortByName(): void
     {
-        usort(
-            $this->tasks,
-            static fn (Task $a, Task $b): int => strcmp($a->getName(), $b->getName()),
-        );
+        $this->sortBy(self::COLUMN_NAME);
     }
 
     public function sortById(): void
     {
-        usort(
-            $this->tasks,
-            static fn (Task $a, Task $b): int => $a->getId() <=> $b->getId(),
-        );
+        $this->sortBy(self::COLUMN_ID);
     }
 
     /**
+     * Sorts the tasks in ascending order by the given column.
+     *
      * @throws InvalidArgumentException when the column is not sortable
      */
     public function sortBy(string $column): void
     {
-        if ($column === 'name') {
-            usort(
-                $this->tasks,
-                static fn (Task $a, Task $b): int => strcmp($a->getName(), $b->getName()),
-            );
+        $comparator = match ($column) {
+            self::COLUMN_ID => static fn (Task $a, Task $b): int => $a->getId() <=> $b->getId(),
+            self::COLUMN_NAME => static fn (Task $a, Task $b): int => strcmp($a->getName(), $b->getName()),
+            default => throw new InvalidArgumentException(
+                sprintf('Cannot sort by unknown column "%s".', $column),
+            ),
+        };
 
-            return;
-        }
-
-        if ($column === 'id') {
-            usort(
-                $this->tasks,
-                static fn (Task $a, Task $b): int => $a->getId() <=> $b->getId(),
-            );
-
-            return;
-        }
-
-        throw new InvalidArgumentException(
-            sprintf('Cannot sort by unknown column "%s".', $column),
-        );
+        usort($this->tasks, $comparator);
     }
 }
