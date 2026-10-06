@@ -1,0 +1,8 @@
+# PHPUnit is installed as a PHAR and is downloaded per machine (see README.md)
+/phpunit.phar
+
+# PHPUnit result cache
+/.phpunit.cache/
+
+# Generated code coverage report
+/coverage/
