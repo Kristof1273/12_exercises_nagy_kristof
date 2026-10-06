@@ -55,13 +55,45 @@ final class TaskList
 
     public function sortByName(): void
     {
+        usort(
+            $this->tasks,
+            static fn (Task $a, Task $b): int => strcmp($a->getName(), $b->getName()),
+        );
     }
 
     public function sortById(): void
     {
+        usort(
+            $this->tasks,
+            static fn (Task $a, Task $b): int => $a->getId() <=> $b->getId(),
+        );
     }
 
+    /**
+     * @throws InvalidArgumentException when the column is not sortable
+     */
     public function sortBy(string $column): void
     {
+        if ($column === 'name') {
+            usort(
+                $this->tasks,
+                static fn (Task $a, Task $b): int => strcmp($a->getName(), $b->getName()),
+            );
+
+            return;
+        }
+
+        if ($column === 'id') {
+            usort(
+                $this->tasks,
+                static fn (Task $a, Task $b): int => $a->getId() <=> $b->getId(),
+            );
+
+            return;
+        }
+
+        throw new InvalidArgumentException(
+            sprintf('Cannot sort by unknown column "%s".', $column),
+        );
     }
 }
