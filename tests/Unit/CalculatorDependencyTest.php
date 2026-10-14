@@ -16,8 +16,10 @@ use PHPUnit\Framework\TestCase;
  *   1. create an empty list of calculation results
  *   2. fill the list with results
  *   3. verify the final state of the list
+ * 
+ *   CalculatorDependencyTest -> testResultsCanBeAddedToTheList -> testResultListHoldsTheFinalState
  *
- * If a test in the chain fails, the tests depending on it are skipped.
+ * If a test in the chain fails, the tests depending on it are skipped!
  */
 final class CalculatorDependencyTest extends TestCase
 {

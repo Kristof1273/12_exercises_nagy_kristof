@@ -9,8 +9,15 @@ test dependencies, Test-Driven Development, stubs and mocks, plus the optional
 - PHP 8.2 or newer (CLI) — required by PHPUnit 11
 - The `pdo_sqlite` extension for the integration test (the test is skipped when
   the extension is missing)
+(use "sudo apt install php-sqlite3" command)
 - Optional: [Xdebug](https://xdebug.org/) or [PCOV](https://github.com/krakjoe/pcov)
   for the code coverage report
+- On a fresh Ubuntu / Debian / WSL install, `dom`, `xmlwriter` and `mbstring` are usually missing. They come from the `php-xml` and `php-mbstring` packages:
+
+```bash
+sudo apt update
+sudo apt install php-xml php-mbstring
+```  
 
 No Composer is needed. PHPUnit is installed as a PHAR, and the classes are
 loaded by the small PSR-4 autoloader in `tests/bootstrap.php`.

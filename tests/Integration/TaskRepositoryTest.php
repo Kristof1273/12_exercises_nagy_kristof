@@ -12,9 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Extra Mile - integration test.
- *
- * Unlike the unit tests, nothing is replaced by a test double here: the
- * repository talks to a real (SQLite in-memory) database through PDO.
  */
 #[RequiresPhpExtension('pdo_sqlite')]
 final class TaskRepositoryTest extends TestCase

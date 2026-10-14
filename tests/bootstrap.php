@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Minimal PSR-4 autoloader.
  *
- * PHPUnit is installed as a PHAR, so the project has no Composer autoloader.
+ * PHPUnit is installed as a PHAR, so the project has no Composer autoloader!
  * This file is referenced by the "bootstrap" attribute in phpunit.xml and maps
  *
  *   App\Tests\...  ->  tests/...
